@@ -1790,7 +1790,7 @@ function showFeedbackModal() {
       statusMsg.style.display = 'none';
 
       // Submit via FormSubmit AJAX (100% free, zero backend setup)
-      fetch("https://formsubmit.co/ajax/galliumcreations@outlook.com", {
+      fetch("https://formsubmit.co/ajax/rsgokulanand@gmail.com", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
