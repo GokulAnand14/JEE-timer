@@ -1570,6 +1570,11 @@ input:checked + .slider:before {
   }
 }
 
+/* Allow dismissing mobile blocker */
+.mobile-blocker.dismissed {
+  display: none !important;
+}
+
 
 
 

@@ -94,6 +94,17 @@ function initApp() {
       showPauseModal('Session Restored', 'We found an unfinished practice session. It is currently paused. Would you like to resume it?');
     }
   }
+
+  // Bind blocker bypass button
+  const btnBypass = document.getElementById('btn-blocker-bypass');
+  if (btnBypass) {
+    btnBypass.addEventListener('click', () => {
+      const blocker = document.querySelector('.mobile-blocker');
+      if (blocker) {
+        blocker.classList.add('dismissed');
+      }
+    });
+  }
 }
 
 // -------------------------------------------------------------
