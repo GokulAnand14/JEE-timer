@@ -766,11 +766,16 @@ function renderPracticeView(container: HTMLElement) {
           `}
         </div>
         
-        <div class="timer-controls">
-          <button class="btn btn-secondary btn-sm" id="btn-pause-resume" style="flex-grow: 1;">
-            ${session.status === 'running' ? 'Pause' : 'Resume'}
+        <div class="timer-controls" style="display: flex; flex-direction: column; gap: 8px; width: 100%;">
+          <div style="display: flex; gap: 8px; width: 100%;">
+            <button class="btn btn-secondary btn-sm" id="btn-pause-resume" style="flex: 1;">
+              ${session.status === 'running' ? 'Pause' : 'Resume'}
+            </button>
+            <button class="btn btn-primary btn-sm" id="btn-end-session" style="flex: 1;">End & Analyse</button>
+          </div>
+          <button class="btn btn-danger btn-sm btn-full" id="btn-quit-session" style="background-color: var(--color-cross-light); color: var(--color-cross-text); border: 1px solid var(--color-cross-border); font-size: 0.8rem; padding: 6px 12px;">
+            Stop & New Test
           </button>
-          <button class="btn btn-danger btn-sm" id="btn-end-session" style="flex-grow: 1;">End & Analyse</button>
         </div>
       </div>
 
@@ -872,6 +877,17 @@ function renderPracticeView(container: HTMLElement) {
         'Are you sure you want to end this practice session? We will analyze your strategy, pacing distribution, and score diagnostic metrics.',
         () => finishSession(false), // onConfirm
         true // showDiscard option
+      );
+    });
+  }
+
+  const btnQuitSession = container.querySelector('#btn-quit-session');
+  if (btnQuitSession) {
+    btnQuitSession.addEventListener('click', () => {
+      showPauseModal(
+        'Quit Practice Session?',
+        'Are you sure you want to stop this practice session and configure a new test? All current tags and pacing data will be discarded.',
+        () => discardActiveSession()
       );
     });
   }
