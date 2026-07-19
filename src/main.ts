@@ -340,6 +340,11 @@ function setupEventListeners() {
   if (btnShowHelp) {
     btnShowHelp.addEventListener('click', () => showHelpModal());
   }
+
+  const btnShowFeedback = document.getElementById('btn-show-feedback');
+  if (btnShowFeedback) {
+    btnShowFeedback.addEventListener('click', () => showFeedbackModal());
+  }
 }
 
 // -------------------------------------------------------------
@@ -565,6 +570,7 @@ function renderApp() {
           ${(appState.activeSession && appState.activeSession.status !== 'completed') ? 'Active Session' : 'New Practice'}
         </button>
         <button class="nav-btn ${appState.currentTab === 'history' ? 'active' : ''}" data-tab="history">History Log</button>
+        <button class="feedback-header-btn" id="btn-show-feedback" type="button">Feedback</button>
         <button class="help-btn" id="btn-show-help" title="How to use the Strategy Timer" type="button">?</button>
       </nav>
     </header>
@@ -1703,6 +1709,120 @@ function showHelpModal() {
           container.innerHTML = '';
         }, 250);
       }
+    });
+  }
+}
+
+function showFeedbackModal() {
+  const container = document.getElementById('modal-container');
+  if (!container) return;
+
+  container.innerHTML = `
+    <div class="modal-backdrop" id="feedback-modal">
+      <div class="modal-content" style="max-width: 420px; text-align: left;">
+        <h3 style="margin-bottom: 12px; font-size: 1.2rem; border-bottom: 1px solid var(--color-border); padding-bottom: 8px;">
+          💬 Send Feedback
+        </h3>
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 16px; line-height: 1.4;">
+          Have a suggestion, bug report, or feature request? Send it straight to the creator!
+        </p>
+        
+        <form id="feedback-form" style="display: flex; flex-direction: column; gap: 12px;">
+          <div class="form-group" style="margin-bottom: 0;">
+            <label for="feedback-name" style="font-size: 0.75rem;">Your Name</label>
+            <input type="text" id="feedback-name" class="form-control" placeholder="e.g. Rahul, Priya" style="padding: 8px; font-size: 0.85rem;" required>
+          </div>
+          
+          <div class="form-group" style="margin-bottom: 0;">
+            <label for="feedback-email" style="font-size: 0.75rem;">Your Email Address (for replies)</label>
+            <input type="email" id="feedback-email" class="form-control" placeholder="name@example.com" style="padding: 8px; font-size: 0.85rem;" required>
+          </div>
+          
+          <div class="form-group" style="margin-bottom: 0;">
+            <label for="feedback-msg" style="font-size: 0.75rem;">Message</label>
+            <textarea id="feedback-msg" class="form-control" rows="4" placeholder="What can we improve?..." style="padding: 8px; font-size: 0.85rem; resize: vertical;" required></textarea>
+          </div>
+          
+          <div id="feedback-status-msg" style="font-size: 0.8rem; display: none; margin-top: 4px;"></div>
+          
+          <div class="modal-actions" style="margin-top: 12px; justify-content: flex-end; gap: 8px;">
+            <button type="button" class="btn btn-secondary btn-sm" id="feedback-btn-cancel" style="padding: 6px 12px;">Cancel</button>
+            <button type="submit" class="btn btn-primary btn-sm" id="feedback-btn-submit" style="padding: 6px 16px;">Send Message</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  `;
+
+  const modal = container.querySelector('#feedback-modal') as HTMLElement;
+  setTimeout(() => {
+    if (modal) modal.classList.add('open');
+  }, 10);
+
+  const form = container.querySelector('#feedback-form') as HTMLFormElement;
+  const btnCancel = container.querySelector('#feedback-btn-cancel');
+  const btnSubmit = container.querySelector('#feedback-btn-submit') as HTMLButtonElement;
+  const statusMsg = container.querySelector('#feedback-status-msg') as HTMLElement;
+
+  const closeModal = () => {
+    if (modal) {
+      modal.classList.remove('open');
+      setTimeout(() => {
+        container.innerHTML = '';
+      }, 250);
+    }
+  };
+
+  if (btnCancel) {
+    btnCancel.addEventListener('click', closeModal);
+  }
+
+  if (form) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const nameInput = container.querySelector('#feedback-name') as HTMLInputElement;
+      const emailInput = container.querySelector('#feedback-email') as HTMLInputElement;
+      const msgInput = container.querySelector('#feedback-msg') as HTMLTextAreaElement;
+      
+      btnSubmit.disabled = true;
+      btnSubmit.textContent = "Sending...";
+      statusMsg.style.display = 'none';
+
+      // Submit via FormSubmit AJAX (100% free, zero backend setup)
+      fetch("https://formsubmit.co/ajax/galliumcreations@outlook.com", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify({
+          name: nameInput.value,
+          email: emailInput.value,
+          message: msgInput.value,
+          _subject: "JEE Strategic Timer - Student Feedback"
+        })
+      })
+      .then(response => {
+        if (!response.ok) throw new Error("Network error");
+        return response.json();
+      })
+      .then(() => {
+        statusMsg.style.display = 'block';
+        statusMsg.style.color = 'var(--color-tick-text)';
+        statusMsg.textContent = "✓ Sent! Thank you for your feedback.";
+        
+        setTimeout(() => {
+          closeModal();
+        }, 1500);
+      })
+      .catch(() => {
+        btnSubmit.disabled = false;
+        btnSubmit.textContent = "Send Message";
+        statusMsg.style.display = 'block';
+        statusMsg.style.color = 'var(--color-cross-text)';
+        statusMsg.textContent = "❌ Failed to send. Please check your internet connection.";
+      });
     });
   }
 }
