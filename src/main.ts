@@ -345,6 +345,11 @@ function setupEventListeners() {
   if (btnShowFeedback) {
     btnShowFeedback.addEventListener('click', () => showFeedbackModal());
   }
+
+  const btnGokulSocials = document.getElementById('btn-gokul-socials');
+  if (btnGokulSocials) {
+    btnGokulSocials.addEventListener('click', () => showSocialsModal());
+  }
 }
 
 // -------------------------------------------------------------
@@ -562,7 +567,10 @@ function renderApp() {
         <div class="brand-logo">JEE</div>
         <div class="brand-title">
           <h1>JEE Strategic Timer</h1>
-          <p class="brand-tagline">Practice & Paper Attempt Pacing System</p>
+          <p class="brand-tagline">
+            Practice & Paper Attempt Pacing System • 
+            <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;">made with ❤️ by <button type="button" id="btn-gokul-socials" style="background: none; border: none; padding: 0; color: var(--color-primary); font-weight: 600; text-decoration: none; cursor: pointer; font-family: inherit; font-size: 0.75rem;">Gokul Anand</button></span>
+          </p>
         </div>
       </div>
       <nav class="nav-tabs" id="nav-tabs" style="display: flex; align-items: center;">
@@ -1823,6 +1831,79 @@ function showFeedbackModal() {
         statusMsg.style.color = 'var(--color-cross-text)';
         statusMsg.textContent = "❌ Failed to send. Please check your internet connection.";
       });
+    });
+  }
+}
+
+function showSocialsModal() {
+  const container = document.getElementById('modal-container');
+  if (!container) return;
+
+  container.innerHTML = `
+    <div class="modal-backdrop" id="socials-modal">
+      <div class="modal-content" style="max-width: 380px; text-align: center; padding: 24px;">
+        <div style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, var(--color-primary), var(--color-primary-gradient-stop, #38bdf8)); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 700; margin: 0 auto 12px auto; box-shadow: var(--shadow-sm);">
+          GA
+        </div>
+        
+        <h3 style="margin-bottom: 4px; font-size: 1.25rem;">Gokul Anand</h3>
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 20px;">JEE Pacing System Creator</p>
+        
+        <div style="display: flex; flex-direction: column; gap: 8px; text-align: left; margin-bottom: 20px;">
+          <a href="https://x.com/not_gallium" target="_blank" class="social-link-item" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; border-radius: var(--radius-sm); border: 1px solid var(--color-border); text-decoration: none; color: var(--text-main); font-size: 0.85rem; font-weight: 600; transition: all 0.2s;">
+            <span style="display: flex; align-items: center; gap: 8px;">
+              <svg style="width: 16px; height: 16px; fill: currentColor;" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+              X / Twitter
+            </span>
+            <span style="color: var(--color-primary); font-size: 0.8rem;">@not_gallium →</span>
+          </a>
+          
+          <a href="https://instagram.com/not_gallium" target="_blank" class="social-link-item" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; border-radius: var(--radius-sm); border: 1px solid var(--color-border); text-decoration: none; color: var(--text-main); font-size: 0.85rem; font-weight: 600; transition: all 0.2s;">
+            <span style="display: flex; align-items: center; gap: 8px;">
+              <svg style="width: 16px; height: 16px; fill: currentColor;" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+              Instagram
+            </span>
+            <span style="color: var(--color-primary); font-size: 0.8rem;">@not_gallium →</span>
+          </a>
+          
+          <a href="https://linkedin.com/in/gokulanand14" target="_blank" class="social-link-item" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; border-radius: var(--radius-sm); border: 1px solid var(--color-border); text-decoration: none; color: var(--text-main); font-size: 0.85rem; font-weight: 600; transition: all 0.2s;">
+            <span style="display: flex; align-items: center; gap: 8px;">
+              <svg style="width: 16px; height: 16px; fill: currentColor;" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.779-1.75-1.75s.784-1.75 1.75-1.75 1.75.779 1.75 1.75-.784 1.75-1.75 1.75zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+              LinkedIn
+            </span>
+            <span style="color: var(--color-primary); font-size: 0.8rem;">gokulanand14 →</span>
+          </a>
+          
+          <a href="https://youtube.com/@GAllium14" target="_blank" class="social-link-item" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; border-radius: var(--radius-sm); border: 1px solid var(--color-border); text-decoration: none; color: var(--text-main); font-size: 0.85rem; font-weight: 600; transition: all 0.2s;">
+            <span style="display: flex; align-items: center; gap: 8px;">
+              <svg style="width: 16px; height: 16px; fill: currentColor;" viewBox="0 0 24 24"><path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.518 3.545 12 3.545 12 3.545s-7.518 0-9.388.508a3.003 3.003 0 0 0-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.11c1.87.508 9.388.508 9.388.508s7.518 0 9.388-.508a3.003 3.003 0 0 0 2.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+              YouTube
+            </span>
+            <span style="color: var(--color-primary); font-size: 0.8rem;">GAllium14 →</span>
+          </a>
+        </div>
+        
+        <div class="modal-actions" style="justify-content: center; margin-top: 12px;">
+          <button class="btn btn-secondary btn-sm" id="socials-btn-close" style="padding: 8px 24px;">Close</button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  const modal = container.querySelector('#socials-modal') as HTMLElement;
+  setTimeout(() => {
+    if (modal) modal.classList.add('open');
+  }, 10);
+
+  const btnClose = container.querySelector('#socials-btn-close');
+  if (btnClose) {
+    btnClose.addEventListener('click', () => {
+      if (modal) {
+        modal.classList.remove('open');
+        setTimeout(() => {
+          container.innerHTML = '';
+        }, 250);
+      }
     });
   }
 }

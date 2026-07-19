@@ -1482,6 +1482,15 @@ input:checked + .slider:before {
   background-color: var(--color-primary-light);
 }
 
+/* Social links hover transition */
+.social-link-item:hover {
+  border-color: var(--color-primary) !important;
+  background-color: var(--color-primary-light) !important;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+
 
 
 
