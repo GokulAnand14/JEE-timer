@@ -649,6 +649,31 @@ function renderConfigView(container: HTMLElement) {
 
   let activePreset = 'adv-pacing';
 
+  // Helper to dynamically calculate and update pacing duration with buffer
+  const autoUpdateTime = () => {
+    if (activePreset !== 'custom') return;
+    const questions = parseInt(questionsInput.value) || 0;
+    if (questions <= 0) return;
+    
+    // Generous pacing multipliers for exam practice (with buffers)
+    let multiplier = 5.0; // Mixed: 5 mins per question
+    if (selectedDiff === 'advanced') {
+      multiplier = 6.0; // Advanced: 6 mins per question
+    } else if (selectedDiff === 'main') {
+      multiplier = 3.5; // Main: 3.5 mins per question
+    }
+    
+    const calculatedMinutes = Math.round(questions * multiplier);
+    if (timeInput) {
+      timeInput.value = calculatedMinutes.toString();
+    }
+  };
+
+  // Bind input trigger for question count change
+  if (questionsInput) {
+    questionsInput.addEventListener('input', autoUpdateTime);
+  }
+
   presetBtns.forEach((btn) => {
     btn.addEventListener('click', (e) => {
       presetBtns.forEach(b => b.classList.remove('active'));
@@ -672,6 +697,7 @@ function renderConfigView(container: HTMLElement) {
         if (timeInput) timeInput.value = '180';
       } else if (preset === 'custom') {
         customInputs?.classList.remove('hidden');
+        autoUpdateTime(); // Update values immediately on Custom load
       }
     });
   });
@@ -686,6 +712,7 @@ function renderConfigView(container: HTMLElement) {
       const target = e.currentTarget as HTMLElement;
       target.classList.add('selected');
       selectedDiff = (target.getAttribute('data-diff') as Difficulty) || 'advanced';
+      autoUpdateTime(); // Recalculate time if difficulty changes in custom mode
     });
   });
 
