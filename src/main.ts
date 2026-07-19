@@ -1662,7 +1662,7 @@ function showHelpModal() {
         </h3>
         <div style="font-size: 0.85rem; line-height: 1.5; color: var(--text-main); display: flex; flex-direction: column; gap: 12px; max-height: 380px; overflow-y: auto; padding-right: 6px;">
           <p>
-            This timer is built on the **Tick-Circle-Cross system** to train you for efficient paper attempt strategy during mock tests and self-practice.
+            This timer is built on the **Tick-Circle-Cross paper-solving method** (popularized by <em>Amit Agarwal Sir, Allen</em>) to train you for efficient paper attempt strategy during mock tests and self-practice.
           </p>
           
           <div>
@@ -1694,6 +1694,10 @@ function showHelpModal() {
               <li>Hover over the timer clock to reveal the remaining time in <strong>Stealth Mode</strong>.</li>
               <li>End the session to view your <strong>Attempt Strategy Diagnostics</strong> and Strategy Score.</li>
             </ul>
+          </div>
+          
+          <div style="font-size: 0.7rem; color: var(--text-muted); text-align: center; border-top: 1px solid var(--color-border); padding-top: 8px; margin-top: 4px;">
+            Method Credit: Amit Agarwal Sir (Allen Career Institute)
           </div>
         </div>
         <div class="modal-actions" style="margin-top: 20px; justify-content: flex-end;">
