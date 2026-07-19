@@ -560,6 +560,8 @@ function renderApp() {
   const appContainer = document.getElementById('app');
   if (!appContainer) return;
 
+  const isSolving = appState.currentTab === 'practice';
+
   // Header section is shared
   let headerHtml = `
     <header class="app-header">
@@ -567,10 +569,12 @@ function renderApp() {
         <div class="brand-logo">JEE</div>
         <div class="brand-title">
           <h1>JEE Strategic Timer</h1>
-          <p class="brand-tagline">
-            Practice & Paper Attempt Pacing System • 
-            <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;">made with ❤️ by <button type="button" id="btn-gokul-socials" style="background: none; border: none; padding: 0; color: var(--color-primary); font-weight: 600; text-decoration: none; cursor: pointer; font-family: inherit; font-size: 0.75rem;">Gokul Anand</button></span>
-          </p>
+          ${isSolving ? '' : `
+            <p class="brand-tagline">
+              Practice & Paper Attempt Pacing System • Method: Amit Agarwal Sir (Allen) • 
+              <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;">made with ❤️ by <button type="button" id="btn-gokul-socials" style="background: none; border: none; padding: 0; color: var(--color-primary); font-weight: 600; text-decoration: none; cursor: pointer; font-family: inherit; font-size: 0.75rem;">Gokul Anand</button></span>
+            </p>
+          `}
         </div>
       </div>
       <nav class="nav-tabs" id="nav-tabs" style="display: flex; align-items: center;">
