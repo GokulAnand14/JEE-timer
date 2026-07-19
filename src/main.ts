@@ -17,8 +17,45 @@ let appState: {
 // Global interval pointer
 let timerInterval: number | null = null;
 
+let activeAccentColor = 'blue';
+
+function applyAccentColor(color: string) {
+  const root = document.documentElement;
+  if (color === 'blue') {
+    root.style.setProperty('--color-primary', '#0284c7');
+    root.style.setProperty('--color-primary-hover', '#0369a1');
+    root.style.setProperty('--color-primary-light', '#f0f9ff');
+    root.style.setProperty('--color-primary-border', '#bae6fd');
+    root.style.setProperty('--color-primary-gradient-stop', '#38bdf8');
+  } else if (color === 'teal') {
+    root.style.setProperty('--color-primary', '#0d9488');
+    root.style.setProperty('--color-primary-hover', '#0f766e');
+    root.style.setProperty('--color-primary-light', '#f0fdfa');
+    root.style.setProperty('--color-primary-border', '#ccfbf1');
+    root.style.setProperty('--color-primary-gradient-stop', '#2dd4bf');
+  } else if (color === 'slate') {
+    root.style.setProperty('--color-primary', '#475569');
+    root.style.setProperty('--color-primary-hover', '#334155');
+    root.style.setProperty('--color-primary-light', '#f1f5f9');
+    root.style.setProperty('--color-primary-border', '#cbd5e1');
+    root.style.setProperty('--color-primary-gradient-stop', '#94a3b8');
+  } else if (color === 'terracotta') {
+    root.style.setProperty('--color-primary', '#c2410c');
+    root.style.setProperty('--color-primary-hover', '#9a3412');
+    root.style.setProperty('--color-primary-light', '#fff7ed');
+    root.style.setProperty('--color-primary-border', '#ffedd5');
+    root.style.setProperty('--color-primary-gradient-stop', '#fb923c');
+  }
+  activeAccentColor = color;
+  localStorage.setItem('jee-timer-accent-color', color);
+}
+
 // Mock / Initial Data Helper
 function initApp() {
+  // Load saved accent color
+  const savedColor = localStorage.getItem('jee-timer-accent-color') || 'blue';
+  applyAccentColor(savedColor);
+
   // Load history from localStorage
   const savedHistory = localStorage.getItem('jee-timer-history');
   if (savedHistory) {
@@ -620,6 +657,16 @@ function renderConfigView(container: HTMLElement) {
             </div>
             
             <div class="form-group">
+              <label>Theme Accent Color</label>
+              <div style="display: flex; gap: 12px; margin-top: 6px;">
+                <button type="button" class="color-dot-btn ${activeAccentColor === 'blue' ? 'active' : ''}" data-color="blue" style="background-color: #0284c7;" title="Ocean Blue"></button>
+                <button type="button" class="color-dot-btn ${activeAccentColor === 'teal' ? 'active' : ''}" data-color="teal" style="background-color: #0d9488;" title="Forest Teal"></button>
+                <button type="button" class="color-dot-btn ${activeAccentColor === 'slate' ? 'active' : ''}" data-color="slate" style="background-color: #475569;" title="Steel Slate"></button>
+                <button type="button" class="color-dot-btn ${activeAccentColor === 'terracotta' ? 'active' : ''}" data-color="terracotta" style="background-color: #c2410c;" title="Warm Terracotta"></button>
+              </div>
+            </div>
+            
+            <div class="form-group">
               <div class="toggle-wrapper" style="padding: 8px 12px;">
                 <div class="toggle-info">
                   <span style="font-size: 0.85rem;">Anxiety-Free Stealth Timer</span>
@@ -713,6 +760,18 @@ function renderConfigView(container: HTMLElement) {
       target.classList.add('selected');
       selectedDiff = (target.getAttribute('data-diff') as Difficulty) || 'advanced';
       autoUpdateTime(); // Recalculate time if difficulty changes in custom mode
+    });
+  });
+
+  // Accent color selector logic
+  const colorBtns = container.querySelectorAll('.color-dot-btn');
+  colorBtns.forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      colorBtns.forEach(b => b.classList.remove('active'));
+      const target = e.currentTarget as HTMLElement;
+      target.classList.add('active');
+      const color = target.getAttribute('data-color') || 'blue';
+      applyAccentColor(color);
     });
   });
 
