@@ -587,7 +587,7 @@ function renderApp() {
           ${isSolving ? '' : `
             <p class="brand-tagline">
               Practice & Paper Attempt Pacing System • Method: Amit Agarwal Sir (Allen) • 
-              <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;">made with ❤️ by <button type="button" id="btn-gokul-socials" style="background: none; border: none; padding: 0; color: var(--color-primary); font-weight: 600; text-decoration: none; cursor: pointer; font-family: inherit; font-size: 0.75rem;">Gokul Anand</button></span>
+              <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;">made with ❤️ by <button type="button" id="btn-gokul-socials" style="background: none; border: none; padding: 0; color: var(--color-primary); font-weight: 600; text-decoration: none; cursor: pointer; font-family: inherit; font-size: 0.75rem;">GA</button></span>
             </p>
           `}
         </div>
