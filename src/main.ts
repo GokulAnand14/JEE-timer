@@ -1,5 +1,9 @@
 import './style.css';
 import type { SavedSession, SessionConfig, SessionState, QuestionTag, QuestionData, Difficulty } from './types';
+import { inject } from '@vercel/analytics';
+
+// Initialize Vercel Analytics
+inject();
 
 // Global variables for App State
 let appState: {
