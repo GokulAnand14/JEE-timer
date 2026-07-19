@@ -348,6 +348,7 @@ function startNewSession(config: SessionConfig) {
       tag: 'unvisited',
       timeSpent: 0,
       visits: 0,
+      solved: false,
     });
   }
 
@@ -367,6 +368,24 @@ function startNewSession(config: SessionConfig) {
 
   showTab('practice');
   startTimerLoop();
+}
+
+function setSolvedStatus(solved: boolean) {
+  const session = appState.activeSession;
+  if (!session) return;
+
+  const currentQ = session.questions[session.activeQuestionIndex];
+  if (!currentQ) return;
+
+  currentQ.solved = solved;
+
+  // Save state backup in LocalStorage
+  localStorage.setItem('jee-timer-active-session', JSON.stringify(session));
+
+  // Dynamic UI updates
+  updateLiveStatsDOM();
+  updateActiveQuestionPanelDOM();
+  updateNavigatorGridDOM();
 }
 
 function pauseSession() {
@@ -402,6 +421,13 @@ function tagActiveQuestion(tag: QuestionTag) {
     currentQ.tag = 'unvisited'; // toggle off
   } else {
     currentQ.tag = tag;
+    
+    // Auto sync solved status based on strategy tag shortcut
+    if (tag === 'tick') {
+      currentQ.solved = true;
+    } else if (tag === 'cross') {
+      currentQ.solved = false;
+    }
   }
 
   // Update in local storage
@@ -442,10 +468,13 @@ function finishSession(forcedTimeout = false) {
   session.status = 'completed';
 
   // Calculate diagnostic metrics
-  let ticks = 0, circles = 0, crosses = 0, unvisited = 0;
+  let ticks = 0, circles = 0, crosses = 0, unvisited = 0, solved = 0;
   let timeTicks = 0, timeCircles = 0, timeCrosses = 0, timeUnvisited = 0;
 
   session.questions.forEach((q) => {
+    if (q.solved) {
+      solved++;
+    }
     if (q.tag === 'tick') {
       ticks++;
       timeTicks += q.timeSpent;
@@ -477,6 +506,7 @@ function finishSession(forcedTimeout = false) {
       circlesCount: circles,
       crossesCount: crosses,
       unvisitedCount: unvisited,
+      solvedCount: solved,
       totalTimeTicks: timeTicks,
       totalTimeCircles: timeCircles,
       totalTimeCrosses: timeCrosses,
@@ -826,7 +856,10 @@ function renderPracticeView(container: HTMLElement) {
           <h3 style="margin-top: 12px; margin-bottom: 4px;" id="card-difficulty-label">
             ${session.config.difficulty === 'advanced' ? 'JEE Advanced Pacing' : session.config.difficulty === 'main' ? 'JEE Main Pacing' : 'Mixed Level Pacing'}
           </h3>
-          <p style="margin-bottom: 12px;" id="card-progress-label">Question ${session.activeQuestionIndex + 1} of ${session.config.totalQuestions}</p>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <span style="font-size: 0.85rem; color: var(--text-muted);" id="card-progress-label">Question ${session.activeQuestionIndex + 1} of ${session.config.totalQuestions}</span>
+            <span id="card-solved-count-badge" style="font-size: 0.85rem; font-weight: 700; color: var(--color-tick);">Solved: 0</span>
+          </div>
           
           <div class="progress-bar-container mb-4">
             <div class="progress-segment tick" id="progress-tick-bar" style="width: 0%"></div>
@@ -1024,10 +1057,17 @@ function updateActiveQuestionPanelDOM() {
     </div>
     
     <div class="workspace-body">
-      <div class="active-q-timer" id="active-q-timer">Time on this question: 00:00</div>
+      <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 12px; flex-wrap: wrap; justify-content: center;">
+        <div class="active-q-timer" id="active-q-timer" style="margin-bottom: 0;">Time on this question: 00:00</div>
+        
+        <div class="solve-status-toggle">
+          <button class="solve-status-btn unsolved-btn ${!currentQ.solved ? 'active' : ''}" id="btn-status-unsolved">Unsolved</button>
+          <button class="solve-status-btn solved-btn ${currentQ.solved ? 'active' : ''}" id="btn-status-solved">Solved</button>
+        </div>
+      </div>
       
-      <p style="max-width: 480px; margin-bottom: 24px; font-size: 0.95rem;">
-        Solve the question in your practice book. Tag this question according to how you felt attempting it:
+      <p style="max-width: 480px; margin-bottom: 12px; font-size: 0.85rem; color: var(--text-muted);">
+        Tag this question according to how you felt attempting it:
       </p>
 
       <div class="strategy-buttons-grid">
@@ -1062,6 +1102,8 @@ function updateActiveQuestionPanelDOM() {
   const btnPrev = panel.querySelector('#btn-prev-q');
   const btnNext = panel.querySelector('#btn-next-q');
   const btnClear = panel.querySelector('#btn-clear-tag');
+  const btnUnsolved = panel.querySelector('#btn-status-unsolved');
+  const btnSolved = panel.querySelector('#btn-status-solved');
   
   const tagTick = panel.querySelector('#tag-btn-tick');
   const tagCircle = panel.querySelector('#tag-btn-circle');
@@ -1075,6 +1117,12 @@ function updateActiveQuestionPanelDOM() {
   }
   if (btnClear) {
     btnClear.addEventListener('click', () => tagActiveQuestion('unvisited'));
+  }
+  if (btnUnsolved) {
+    btnUnsolved.addEventListener('click', () => setSolvedStatus(false));
+  }
+  if (btnSolved) {
+    btnSolved.addEventListener('click', () => setSolvedStatus(true));
   }
 
   if (tagTick) {
@@ -1091,6 +1139,11 @@ function updateActiveQuestionPanelDOM() {
   const progressLabel = document.getElementById('card-progress-label');
   if (progressLabel) {
     progressLabel.textContent = `Question ${currentQ.number} of ${session.config.totalQuestions}`;
+  }
+  const solvedBadge = document.getElementById('card-solved-count-badge');
+  if (solvedBadge) {
+    const solvedCount = session.questions.filter(q => q.solved).length;
+    solvedBadge.textContent = `Solved: ${solvedCount}`;
   }
 }
 
@@ -1111,6 +1164,7 @@ function updateNavigatorGridDOM() {
     return `
       <button class="nav-q-btn ${tagClass} ${isActive}" data-q-idx="${idx}">
         ${q.number}
+        ${q.solved ? '<span class="q-solved-badge">✓</span>' : ''}
       </button>
     `;
   }).join('');
@@ -1289,10 +1343,10 @@ function renderSummaryView(container: HTMLElement) {
           
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
             <div class="metric-card" style="padding: 10px;">
-              <div class="value" style="font-size: 1.5rem;">
-                ${session.questions.filter(q => q.tag !== 'unvisited').length}/${session.config.totalQuestions}
+              <div class="value" style="font-size: 1.5rem; color: var(--color-tick);">
+                ${session.metrics.solvedCount}/${session.config.totalQuestions}
               </div>
-              <div class="label" style="font-size: 0.65rem;">Questions Tagged</div>
+              <div class="label" style="font-size: 0.65rem;">Questions Solved</div>
             </div>
             <div class="metric-card" style="padding: 10px;">
               <div class="value" style="font-size: 1.25rem; line-height: 1.2;">
@@ -1355,8 +1409,11 @@ function renderSummaryView(container: HTMLElement) {
             return `
               <div class="breakdown-row" style="padding: 8px 12px;">
                 <div class="breakdown-q-num" style="width: 70px;">Q. ${q.number}</div>
-                <div style="width: 100px;">
+                <div style="width: 180px; display: flex; gap: 4px; align-items: center;">
                   <span class="breakdown-tag-badge ${q.tag}" style="font-size:0.7rem; padding: 2px 6px;">${q.tag.toUpperCase()}</span>
+                  <span class="breakdown-tag-badge ${q.solved ? 'tick' : 'unvisited'}" style="font-size:0.65rem; padding: 2px 6px; border: 1px solid ${q.solved ? 'var(--color-tick-border)' : 'var(--color-border)'};">
+                    ${q.solved ? 'SOLVED' : 'UNSOLVED'}
+                  </span>
                 </div>
                 <div class="breakdown-bar" style="margin: 0 12px;">
                   <div class="breakdown-bar-fill ${q.tag}" style="width: ${pct}%;"></div>

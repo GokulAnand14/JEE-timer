@@ -1357,5 +1357,61 @@ input:checked + .slider:before {
   transform: scale(1.12);
 }
 
+/* Solved status toggle switch */
+.solve-status-toggle {
+  display: inline-flex;
+  background-color: var(--bg-app);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 3px;
+  margin-bottom: 12px;
+  gap: 2px;
+}
+
+.solve-status-btn {
+  background: none;
+  border: 1px solid transparent;
+  padding: 6px 14px;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  transition: all 0.15s;
+}
+
+.solve-status-btn.unsolved-btn.active {
+  background-color: #cbd5e1;
+  color: #334155;
+}
+
+.solve-status-btn.solved-btn.active {
+  background-color: var(--color-tick);
+  color: var(--text-inverse);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Solved notification dot/badge on question navigator */
+.nav-q-btn .q-solved-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 14px;
+  height: 14px;
+  background-color: var(--color-tick);
+  color: white;
+  font-size: 0.65rem;
+  font-weight: 900;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+  border: 1px solid white;
+  line-height: 1;
+}
+
+
 
 

@@ -6,6 +6,7 @@ export interface QuestionData {
   tag: QuestionTag;
   timeSpent: number; // cumulative time spent on this question in seconds
   visits: number;
+  solved: boolean; // whether the question was actually solved successfully
 }
 
 export interface SessionConfig {
@@ -35,6 +36,7 @@ export interface SavedSession {
     circlesCount: number;
     crossesCount: number;
     unvisitedCount: number;
+    solvedCount: number;
     totalTimeTicks: number;
     totalTimeCircles: number;
     totalTimeCrosses: number;
