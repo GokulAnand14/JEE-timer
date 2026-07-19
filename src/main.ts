@@ -782,7 +782,7 @@ function renderPracticeView(container: HTMLElement) {
           
           ${session.config.stealthMode ? `
             <div class="stealth-indicator" id="stealth-status">
-              <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background-color:#5f5af6; animation: pulse 1.5s infinite;"></span>
+              <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background-color:var(--color-primary); animation: pulse 1.5s infinite;"></span>
               Stealth mode active
             </div>
             <div class="stealth-hint" id="stealth-tip">Hover clock to reveal</div>

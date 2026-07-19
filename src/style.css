@@ -10,10 +10,10 @@
   --text-muted: #64748b;
   --text-inverse: #ffffff;
   
-  --color-primary: #5f5af6;
-  --color-primary-hover: #4b45e3;
-  --color-primary-light: #eef2ff;
-  --color-primary-border: #c7d2fe;
+  --color-primary: #0284c7;
+  --color-primary-hover: #0369a1;
+  --color-primary-light: #f0f9ff;
+  --color-primary-border: #bae6fd;
   
   --color-border: #e2e8f0;
   --color-border-hover: #cbd5e1;
@@ -150,7 +150,7 @@ a:hover {
 .brand-logo {
   width: 40px;
   height: 40px;
-  background: linear-gradient(135deg, var(--color-primary), #818cf8);
+  background: linear-gradient(135deg, var(--color-primary), #38bdf8);
   border-radius: var(--radius-md);
   display: flex;
   align-items: center;
