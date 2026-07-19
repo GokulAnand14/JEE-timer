@@ -630,28 +630,74 @@ function renderConfigView(container: HTMLElement) {
   container.innerHTML = `
     <div class="config-layout">
       <!-- Left Pane: Strategy Instructions -->
-      <div class="config-left-pane">
-        <div class="bento-card" style="border-left: 5px solid var(--color-primary); padding: 16px;">
-          <h3 style="margin-bottom: 6px; font-size: 1.1rem; color: var(--color-primary);">Attempt Strategy Training</h3>
-          <p style="font-size: 0.8rem; margin-bottom: 0; line-height: 1.45;">
-            JEE is an exam of <strong>selective elimination</strong>. Your goal is to maximize total marks by prioritizing easy questions and quickly skipping the speed-breakers.
+      <div class="config-left-pane" style="gap: 12px;">
+        <!-- Card 1: Overview -->
+        <div class="bento-card" style="border-left: 5px solid var(--color-primary); padding: 14px;">
+          <h3 style="margin-bottom: 4px; font-size: 1rem; color: var(--color-primary); display: flex; align-items: center; gap: 6px;">
+            🎯 Strategy Training
+          </h3>
+          <p style="font-size: 0.75rem; margin-bottom: 0; line-height: 1.45; color: var(--text-muted);">
+            JEE is an exam of <strong>selective elimination</strong>. This app trains your muscle memory using the <strong>Tick-Circle-Cross method</strong> (popularized by <strong>Amit Agarwal Sir, Allen</strong>) to optimize paper coverage and score max marks.
           </p>
         </div>
         
-        <div class="bento-card" style="padding: 16px;">
-          <h3 style="margin-bottom: 10px; font-size: 1rem;">The Tick-Circle-Cross Strategy</h3>
-          <div style="display: flex; flex-direction: column; gap: 8px; font-size: 0.8rem; line-height: 1.35;">
-            <div class="flex items-center gap-2">
-              <span class="breakdown-tag-badge tick" style="font-size: 0.65rem; padding: 2px 6px; width: 70px; text-align: center; flex-shrink:0;">TICK ✓</span>
-              <span>Solved &amp; Easy. Answer immediately. (&lt;2 mins)</span>
+        <!-- Card 2: The Tags -->
+        <div class="bento-card" style="padding: 14px;">
+          <h3 style="margin-bottom: 8px; font-size: 0.9rem;">Attempt Classification</h3>
+          <div style="display: flex; flex-direction: column; gap: 8px; font-size: 0.75rem; line-height: 1.35;">
+            <div style="display: flex; align-items: flex-start; gap: 8px;">
+              <span class="breakdown-tag-badge tick" style="font-size: 0.6rem; padding: 2px 6px; width: 68px; text-align: center; flex-shrink:0; margin-top: 1px;">TICK ✓</span>
+              <div style="color: var(--text-main);">
+                <strong>Solved Immediately:</strong> Concept is clear; takes &lt;2 mins. Solve now.
+              </div>
             </div>
-            <div class="flex items-center gap-2">
-              <span class="breakdown-tag-badge circle" style="font-size: 0.65rem; padding: 2px 6px; width: 70px; text-align: center; flex-shrink:0;">CIRCLE ◯</span>
-              <span>Think &amp; Solve. Calculative but solvable. (Pass 2)</span>
+            <div style="display: flex; align-items: flex-start; gap: 8px;">
+              <span class="breakdown-tag-badge circle" style="font-size: 0.6rem; padding: 2px 6px; width: 68px; text-align: center; flex-shrink:0; margin-top: 1px;">CIRCLE ◯</span>
+              <div style="color: var(--text-main);">
+                <strong>Think &amp; Solve:</strong> Concept is known, but requires lengthy calculations. Skip for Pass 2.
+              </div>
             </div>
-            <div class="flex items-center gap-2">
-              <span class="breakdown-tag-badge cross" style="font-size: 0.65rem; padding: 2px 6px; width: 70px; text-align: center; flex-shrink:0;">CROSS ✗</span>
-              <span>Tough / Trap. Skip within 45s to save time!</span>
+            <div style="display: flex; align-items: flex-start; gap: 8px;">
+              <span class="breakdown-tag-badge cross" style="font-size: 0.6rem; padding: 2px 6px; width: 68px; text-align: center; flex-shrink:0; margin-top: 1px;">CROSS ✗</span>
+              <div style="color: var(--text-main);">
+                <strong>Speed Skip:</strong> Traps or completely unknown topics. <strong>Ditch in &lt;45 seconds!</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3: The Strategy Passes (Visual timeline roadmap) -->
+        <div class="bento-card" style="padding: 14px;">
+          <h3 style="margin-bottom: 10px; font-size: 0.9rem; display: flex; align-items: center; gap: 6px;">
+            🚀 The Three-Pass Attempt Strategy
+          </h3>
+          
+          <div style="display: flex; flex-direction: column; gap: 10px; position: relative; padding-left: 14px; border-left: 2px dashed var(--color-border); margin-left: 6px;">
+            <!-- Pass 1 -->
+            <div style="position: relative;">
+              <span style="position: absolute; left: -20px; top: 1px; width: 10px; height: 10px; border-radius: 50%; background-color: var(--color-primary); border: 2px solid white; box-shadow: 0 0 0 1px var(--color-primary);"></span>
+              <strong style="font-size: 0.8rem; color: var(--color-primary);">Pass 1: Scan &amp; Sweep (Ticks)</strong>
+              <p style="margin: 2px 0 0 0; font-size: 0.72rem; color: var(--text-muted); line-height: 1.3;">
+                Go sequentially. Solve all <strong>Ticks</strong> immediately. Tag solvable lengthies as <strong>Circles</strong>. Spot trap questions and tag them as <strong>Crosses</strong> in under 45s.
+              </p>
+            </div>
+            
+            <!-- Pass 2 -->
+            <div style="position: relative;">
+              <span style="position: absolute; left: -20px; top: 1px; width: 10px; height: 10px; border-radius: 50%; background-color: var(--color-circle); border: 2px solid white; box-shadow: 0 0 0 1px var(--color-circle);"></span>
+              <strong style="font-size: 0.8rem; color: var(--color-circle);">Pass 2: Targeted Conquest (Circles)</strong>
+              <p style="margin: 2px 0 0 0; font-size: 0.72rem; color: var(--text-muted); line-height: 1.3;">
+                Return to all tagged <strong>Circles</strong>. Invest your saved focus and calculate your way to correct options. Mark them <strong>Solved</strong> once finished.
+              </p>
+            </div>
+            
+            <!-- Pass 3 -->
+            <div style="position: relative;">
+              <span style="position: absolute; left: -20px; top: 1px; width: 10px; height: 10px; border-radius: 50%; background-color: var(--color-tick); border: 2px solid white; box-shadow: 0 0 0 1px var(--color-tick);"></span>
+              <strong style="font-size: 0.8rem; color: var(--color-tick);">Pass 3: The Revision Wrap-Up</strong>
+              <p style="margin: 2px 0 0 0; font-size: 0.72rem; color: var(--text-muted); line-height: 1.3;">
+                Clean up remaining circles or unvisited parts. Enjoy a high Strategy Score by spending **zero seconds** stuck on Crossed trap questions!
+              </p>
             </div>
           </div>
         </div>
