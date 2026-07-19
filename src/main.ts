@@ -335,6 +335,11 @@ function setupEventListeners() {
   if (tabHistory) {
     tabHistory.addEventListener('click', () => showTab('history'));
   }
+
+  const btnShowHelp = document.getElementById('btn-show-help');
+  if (btnShowHelp) {
+    btnShowHelp.addEventListener('click', () => showHelpModal());
+  }
 }
 
 // -------------------------------------------------------------
@@ -555,11 +560,12 @@ function renderApp() {
           <p class="brand-tagline">Practice & Paper Attempt Pacing System</p>
         </div>
       </div>
-      <nav class="nav-tabs" id="nav-tabs">
+      <nav class="nav-tabs" id="nav-tabs" style="display: flex; align-items: center;">
         <button class="nav-btn ${appState.currentTab === 'config' ? 'active' : ''}" data-tab="config">
           ${(appState.activeSession && appState.activeSession.status !== 'completed') ? 'Active Session' : 'New Practice'}
         </button>
         <button class="nav-btn ${appState.currentTab === 'history' ? 'active' : ''}" data-tab="history">History Log</button>
+        <button class="help-btn" id="btn-show-help" title="How to use the Strategy Timer" type="button">?</button>
       </nav>
     </header>
     <main id="main-content">
@@ -961,17 +967,6 @@ function renderPracticeView(container: HTMLElement) {
         </div>
       </div>
 
-      <!-- Card 5: Real-time Guidance Tips -->
-      <div class="bento-card guidance-card">
-        <h3>Pacing Guide</h3>
-        <div class="guidance-box">
-          <div class="guidance-title" id="guidance-tip-title">Attempt Order</div>
-          <div id="guidance-tip-text">Scan the paper sequentially. If you see a question you can solve in 2 mins, tag it Tick ✓ and solve immediately. If it will take longer, Circle ◯ it and move on.</div>
-        </div>
-        <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 12px; line-height: 1.35;">
-          <strong>Strategy Tip:</strong> Your average time on crossed (✗) questions should be minimal. Speed skip the tough ones!
-        </div>
-      </div>
     </div>
   `;
 
@@ -1091,10 +1086,6 @@ function updateActiveQuestionPanelDOM() {
       <button class="clear-tag-btn" id="btn-clear-tag" style="visibility: ${currentQ.tag !== 'unvisited' ? 'visible' : 'hidden'};">
         Reset to Unvisited
       </button>
-    </div>
-    
-    <div class="flex justify-between items-center" style="border-top: 1px solid var(--color-border); padding-top: 12px; font-size: 0.8rem; color: var(--text-muted);">
-      <div>JEE Tip: Crosses are positive actions! Skipping a 10-minute speed-breaker is as good as solving a 2-minute easy question.</div>
     </div>
   `;
 
@@ -1640,6 +1631,77 @@ function showPauseModal(title: string, message: string, onConfirm?: () => void, 
       closeModal();
       if (confirm('Are you absolutely sure you want to discard this practice set? None of your logs will be saved.')) {
         discardActiveSession();
+      }
+    });
+  }
+}
+
+function showHelpModal() {
+  const container = document.getElementById('modal-container');
+  if (!container) return;
+
+  container.innerHTML = `
+    <div class="modal-backdrop" id="help-modal">
+      <div class="modal-content" style="max-width: 520px; text-align: left;">
+        <h3 style="margin-bottom: 16px; font-size: 1.25rem; border-bottom: 1px solid var(--color-border); padding-bottom: 8px;">
+          📖 How to Use the Pacing Timer
+        </h3>
+        <div style="font-size: 0.85rem; line-height: 1.5; color: var(--text-main); display: flex; flex-direction: column; gap: 12px; max-height: 380px; overflow-y: auto; padding-right: 6px;">
+          <p>
+            This timer is built on the **Tick-Circle-Cross system** to train you for efficient paper attempt strategy during mock tests and self-practice.
+          </p>
+          
+          <div>
+            <strong style="color: var(--color-tick);">✓ Ticks (Easy / Solved immediately):</strong>
+            <p style="margin: 2px 0 0 0; color: var(--text-muted);">
+              Questions you immediately recognize and can solve fast. Secure these marks in Pass 1. Marking a Tick automatically marks it Solved.
+            </p>
+          </div>
+          
+          <div>
+            <strong style="color: var(--color-circle);">◯ Circles (Think / Solvable with effort):</strong>
+            <p style="margin: 2px 0 0 0; color: var(--text-muted);">
+              Questions you know how to solve, but require deep thought or calculation. Save them for Pass 2. Toggle the Solved switch when finished.
+            </p>
+          </div>
+          
+          <div>
+            <strong style="color: var(--color-cross);">✗ Crosses (Tough / Speed-breakers):</strong>
+            <p style="margin: 2px 0 0 0; color: var(--text-muted);">
+              Trap questions or concepts you have no idea about. **Skip them in under 45 seconds** by tagging them Cross. This saves precious minutes.
+            </p>
+          </div>
+
+          <div style="border-top: 1px dashed var(--color-border); padding-top: 8px;">
+            <strong>📝 Quick Controls Guide:</strong>
+            <ul style="margin: 4px 0 0 16px; padding: 0; color: var(--text-muted); list-style-type: disc;">
+              <li>Work on your physical practice workbook or paper.</li>
+              <li>Toggle <strong>Solved / Unsolved</strong> in the active workspace to log outcome.</li>
+              <li>Hover over the timer clock to reveal the remaining time in <strong>Stealth Mode</strong>.</li>
+              <li>End the session to view your <strong>Attempt Strategy Diagnostics</strong> and Strategy Score.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="modal-actions" style="margin-top: 20px; justify-content: flex-end;">
+          <button class="btn btn-primary btn-sm" id="help-btn-close" style="padding: 8px 16px;">Got it, Let's Practice</button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  const modal = container.querySelector('#help-modal') as HTMLElement;
+  setTimeout(() => {
+    if (modal) modal.classList.add('open');
+  }, 10);
+
+  const btnClose = container.querySelector('#help-btn-close');
+  if (btnClose) {
+    btnClose.addEventListener('click', () => {
+      if (modal) {
+        modal.classList.remove('open');
+        setTimeout(() => {
+          container.innerHTML = '';
+        }, 250);
       }
     });
   }
